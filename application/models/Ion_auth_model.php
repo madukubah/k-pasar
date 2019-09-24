@@ -800,8 +800,16 @@ class Ion_auth_model extends MY_Model
 	 * @return    bool
 	 * @author    Mathew
 	 */
-	public function register($identity, $password, $email, $additional_data = [], $groups = [])
+	public function register($identity, $password, $email, $additional_data = [], $groups = [] , $identity_mode = NULL )
 	{
+		if( $identity_mode != NULL )
+		{
+			$this->identity_column = "phone";
+		}
+		
+
+		// $this->identity_column = "phone" ;
+
 		$this->trigger_events('pre_register');
 
 		$manual_activation = $this->config->item('manual_activation', 'ion_auth');
@@ -854,6 +862,8 @@ class Ion_auth_model extends MY_Model
 		// filter out any data passed that doesnt have a matching column in the users table
 		// and merge the set user data and the additional data
 		$user_data = array_merge($this->_filter_data($this->tables['users'], $additional_data), $data);
+		// default image
+		if( ! array_key_exists( "image", $user_data ) ) $user_data["image"] = "default.jpg";
 
 		$this->trigger_events('extra_set');
 
@@ -891,8 +901,12 @@ class Ion_auth_model extends MY_Model
 	 * @return    bool
 	 * @author    Mathew
 	 */
-	public function login( $identity, $password, $remember=FALSE )
+	public function login( $identity, $password, $remember=FALSE, $identity_mode = NULL )
 	{
+		if( $identity_mode != NULL )
+		{
+			$this->identity_column = $identity_mode;
+		}
 		$this->trigger_events('pre_login');
 
 		if (empty($identity) || empty($password))
@@ -903,7 +917,7 @@ class Ion_auth_model extends MY_Model
 
 		$this->trigger_events('extra_where');
 
-		$query = $this->db->select($this->identity_column . ', email, id, password, active, last_login, first_name, last_name, image')
+		$query = $this->db->select( $this->identity_column . ', email, id, password, active, last_login, first_name, last_name, CONCAT( "'.base_url('uploads/users_photo/').'", image ) as image')
 						  ->where($this->identity_column, $identity)
 						  ->limit(1)
 						  ->order_by('id', 'desc')
@@ -1473,6 +1487,7 @@ class Ion_auth_model extends MY_Model
 			    $this->tables['users'].'.id as id',
 			    $this->tables['users'].'.id as user_id',
 			    'CONCAT( users.first_name, " ", users.last_name ) as user_fullname',
+			    'CONCAT( "'.base_url('uploads/users_photo/').'", image ) as image',
 			    'groups.description  as group_name',
 			    'groups.id  as group_id',
 			]);
@@ -1501,11 +1516,11 @@ class Ion_auth_model extends MY_Model
 			if (isset($groups) && !empty($groups))
 			{
 				$this->db->distinct();
-				$this->db->join(
-				    $this->tables['users_groups'],
-				    $this->tables['users_groups'].'.'.$this->join['users'].'='.$this->tables['users'].'.id',
-				    'inner'
-				);
+				// $this->db->join(
+				//     $this->tables['users_groups'],
+				//     $this->tables['users_groups'].'.'.$this->join['users'].'='.$this->tables['users'].'.id',
+				//     'inner'
+				// );
 			}
 
 			// verify if group name or group id was used and create and put elements in different arrays
@@ -1520,7 +1535,7 @@ class Ion_auth_model extends MY_Model
 			// if group name was used we do one more join with groups
 			if(!empty($group_names))
 			{
-				$this->db->join($this->tables['groups'], $this->tables['users_groups'] . '.' . $this->join['groups'] . ' = ' . $this->tables['groups'] . '.id', 'inner');
+				// $this->db->join($this->tables['groups'], $this->tables['users_groups'] . '.' . $this->join['groups'] . ' = ' . $this->tables['groups'] . '.id', 'inner');
 				$this->db->where_in($this->tables['groups'] . '.name', $group_names);
 			}
 			if(!empty($group_ids))
@@ -1909,8 +1924,12 @@ class Ion_auth_model extends MY_Model
 	 * @return bool
 	 * @author Phil Sturgeon
 	 */
-	public function update($id, array $data)
+	public function update($id, array $data, $identity_mode = NULL )
 	{
+		if( $identity_mode != NULL )
+		{
+			$this->identity_column = $identity_mode;
+		}
 		$this->trigger_events('pre_update_user');
 
 		$user = $this->user($id)->row();

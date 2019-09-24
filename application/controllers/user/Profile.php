@@ -91,8 +91,13 @@ class Profile extends User_Controller {
 			}
 
 			$user = $this->ion_auth->user()->row();//curr user
+
+			if( !$this->ion_auth->in_group( ["admin", "uadmin"] , $user->id ) )
+			{
+				$identity_mode = "phone";
+			}
 			// check to see if we are updating the user
-			if ( $this->ion_auth->update( $user->id, $data) )
+			if ( $this->ion_auth->update( $user->id, $data, $identity_mode) )
 			{
 				// redirect them back to the admin page if admin, or to the base url if non admin
 				$this->session->set_flashdata('alert', $this->alert->set_alert( Alert::SUCCESS, $this->ion_auth->messages() ) );

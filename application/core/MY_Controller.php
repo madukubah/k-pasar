@@ -8,6 +8,7 @@ class MY_Controller extends CI_Controller {
     public function __construct(){
 	   parent::__construct();
 	   $this->data["menu_list_id"] = $this->router->fetch_class() . '_' . $this->router->fetch_method() ; 
+	   $this->data["user_image"] = ( $this->session->userdata( 'user_image' ) != "" ) ? $this->session->userdata( 'user_image' ) : base_url('assets/img/user.png') ;
     }
 
     protected function render($the_view = NULL, $template = NULL){
@@ -106,6 +107,23 @@ class Admin_Controller extends User_Controller
     public function __construct(){
       parent::__construct();
     	if( !$this->ion_auth->is_admin() ){
+    		$this->session->set_flashdata('alert', $this->alert->set_alert( Alert::DANGER, $this->lang->line('login_must_admin') ) );
+    		redirect(site_url('/auth/login'));
+    	}else{
+      }
+    }
+
+    protected function render($the_view = NULL, $template = 'admin_master'){
+  		parent::render($the_view, $template);
+  	}
+}
+
+class Uadmin_Controller extends User_Controller
+{
+	public function __construct()
+	{
+      parent::__construct();
+    	if( !$this->ion_auth->in_group( 'uadmin' ) ){
     		$this->session->set_flashdata('alert', $this->alert->set_alert( Alert::DANGER, $this->lang->line('login_must_admin') ) );
     		redirect(site_url('/auth/login'));
     	}else{

@@ -66,6 +66,10 @@ class User_services
 				  'type' => 'hidden',
 				  'label' => "id",
 				),
+				"group_id" => array(
+				  'type' => 'hidden',
+				  'label' => "group_id",
+				),
 			  ),
 			  "title" => "User",
 			  "data_name" => "user_fullname",

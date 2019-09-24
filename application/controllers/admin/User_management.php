@@ -131,8 +131,13 @@ class User_management extends Admin_Controller
             {
               $data['password'] = $this->input->post('password');
 			}
-			if ( $this->ion_auth->update( $user_id, $data ) )
-            {
+			if( !$this->ion_auth->in_group( ["admin", "uadmin"] , $user_id ) )
+			{
+				$identity_mode = "phone";
+			}
+			// check to see if we are updating the user
+			if ( $this->ion_auth->update( $user_id, $data, $identity_mode) )
+			{
               // redirect them back to the admin page if admin, or to the base url if non admin
               $this->session->set_flashdata('alert', $this->alert->set_alert( Alert::SUCCESS, $this->ion_auth->messages() ) );
               redirect( site_url($this->current_page)  );

@@ -13,11 +13,7 @@
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
         <div class="image">
           <!-- <img src="<?= base_url('assets/') ?>dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image"> -->
-            <?php if( $this->session->userdata( 'user_image' ) ) :?>
-                <img class="img-circle elevation-2" src="<?php echo base_url('uploads/users_photo/').$this->session->userdata( 'user_image' ) ?>" width="48" height="48" alt="User" />
-            <?php else: ?>
-                <img class="img-circle elevation-2" src="<?php echo base_url('assets/')?>img/user.png" width="48" height="48" alt="User" />
-            <?php endif; ?>
+                <img class="img-circle elevation-2" src="<?php echo $user_image ?>" width="48" height="48" alt="User" />
         </div>
         <div class="info">
           <a href="<?= base_url('user/profile') ?>" class="d-block"><?php echo ucwords($this->session->userdata('user_profile_name')) ?></a>
@@ -74,46 +70,6 @@
           
             print_menus( $_menus );
           ?>
-          <!-- <li class="nav-item has-treeview menu-open">
-            <a href="#" class="nav-link active">
-              <i class="nav-icon fas fa-tachometer-alt"></i>
-              <p>
-                Dashboard
-                <i class="right fas fa-angle-left"></i>
-              </p>
-            </a>
-            <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="./index.html" class="nav-link active">
-                  <i class="fas fa-tachometer-alt nav-icon"></i>
-                  <p>Dashboard v1</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="./index2.html" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Dashboard v2</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="./index3.html" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Dashboard v3</p>
-                </a>
-              </li>
-            </ul>
-          </li>
-          <li class="nav-item">
-            <a href="pages/widgets.html" class="nav-link">
-              <i class="nav-icon fas fa-th"></i>
-              <p>
-                Widgets
-                <span class="right badge badge-danger">New</span>
-              </p>
-            </a>
-          </li> -->
-
-
         </ul>
 
       </nav>

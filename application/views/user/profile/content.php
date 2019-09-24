@@ -57,7 +57,7 @@
                         <div class="card">
                             <div class="card-body">
                             <?php if( ! $user->image == "" ) :?>
-                                <img class=" img-fluid " src="<?php echo base_url('uploads/users_photo/').$user->image ?>">
+                                <img class=" img-fluid " src="<?php echo $user->image ?>">
                             <?php else: ?>
                                 <img class="img-fluid" src="<?php echo base_url('assets/')?>img/user.png" alt="User" />
                             <?php endif; ?>

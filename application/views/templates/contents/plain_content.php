@@ -32,7 +32,7 @@
                     <div class="col-2"></div>
                     <div class="col-10">
                       <div class="float-right">
-                        <?php echo (isset($header_button)) ? $header_button : '';  ?>
+                        <?php echo (isset( $header_button )) ? $header_button : '';  ?>
                       </div>
                     </div>
                   </div>

@@ -14,15 +14,16 @@ class Auth extends Public_Controller
 
         public function login() 
         {
-                
+                // echo $this->config->item('identity', 'ion_auth') = "phone" ;return;
                 $this->form_validation->set_rules('identity', 'identity', 'required');
                 $this->form_validation->set_rules('user_password','user_password','trim|required');
                 if ($this->form_validation->run() == true)
                 {
                         // echo $this->input->post('identity');
                         // echo $this->input->post('user_password');
+                        $identity_mode = ( is_numeric( $this->input->post('identity') ) ) ? "phone" : NULL;
                         // return;
-                        if ( $this->ion_auth->login( $this->input->post('identity'), $this->input->post('user_password') ))
+                        if ( $this->ion_auth->login( $this->input->post('identity'), $this->input->post('user_password') , FALSE, $identity_mode  ))
                         {
                                 //if the login is successful
                                 //redirect them back to the home page
@@ -31,6 +32,8 @@ class Auth extends Public_Controller
                                 // echo $this->ion_auth->messages();return;
 
                                 if( $this->ion_auth->is_admin()) redirect(site_url('/admin'));
+
+                                if( $this->ion_auth->in_group( 'uadmin' ) ) redirect(site_url('/uadmin'));
 
                                 redirect( site_url('/user') , 'refresh'); // use redirects instead of loading views for compatibility with MY_Controller libraries
                         }

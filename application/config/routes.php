@@ -55,3 +55,7 @@ $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 
 $route['admin/menus/group'] = 'admin';
+$route['uadmin/users/add'] = 'uadmin/users/add';
+$route['uadmin/users/delete'] = 'uadmin/users/delete';
+
+$route['uadmin/users/(:any)'] = 'uadmin/users/index/$1';

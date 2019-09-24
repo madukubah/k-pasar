@@ -18,8 +18,6 @@ class Menus extends Admin_Controller {
 	}
 	public function index()
 	{
-		// echo $this->router->fetch_class();
-		// echo $this->router->fetch_method();
 		// return;
 		// echo json_encode( $this->data[ "_menus" ] ) ;return;
 		$table = $this->services->groups_table_config( $this->current_page );
@@ -42,6 +40,7 @@ class Menus extends Admin_Controller {
 
 	public function group( $group_id )
 	{
+		$this->data[ "menu_list_id" ] = "menus_index";
 		// echo var_dump( $this->Menu_model->tree( $group_id ) ) ;return;
 		$group = $this->Group_model->group( $group_id )->row();
 		if( $group == NULL ) redirect( site_url($this->current_page)  );
