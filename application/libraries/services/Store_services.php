@@ -101,7 +101,12 @@ class Store_services
           'field' => 'description',
           'label' => 'icon',
           'rules' =>  'trim|required',
-        ),
+		),
+		array(
+			'field' => 'user_id',
+			'label' => 'User',
+			'rules' =>  'trim|required|is_unique[users.id]',
+		  ),
     );
     
     return $config;
@@ -135,6 +140,11 @@ class Store_services
 				'type' => 'hidden',
 				'label' => "ID",
 				'value' => $this->form_validation->set_value('id', $this->id),
+			),
+			"user_id" => array(
+				'type' => 'hidden',
+				'label' => "ID",
+				'value' => $this->ion_auth->get_user_id(  ),
 			),
 			"name" => array(
 			  'type' => 'text',

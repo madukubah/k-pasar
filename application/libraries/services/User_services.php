@@ -36,6 +36,7 @@ class User_services
 			'group_name' => 'Group',
 			'user_fullname' => 'Nama Lengkap',
 			'phone' => 'No Telepon',
+			'address' => 'Alamat',
 			'email' => 'Email',
 		  );
 		  $table["number"] = $start_number ;
@@ -137,6 +138,8 @@ class User_services
 			$this->id			=$user->user_id;
 			$this->email		=$user->email;
 			$this->group_id		=$user->group_id;
+			$this->address		=$user->address;
+
 		}
 
 		$groups =$this->ion_auth_model->groups(  )->result();
@@ -171,13 +174,17 @@ class User_services
 			  'type' => 'text',
 			  'label' => "Nama Belakang",
 			  'value' => $this->form_validation->set_value('last_name', $this->last_name),
-			  
 			),
 			"email" => array(
 			  'type' => 'text',
 			  'label' => "Email",
 			  'value' => $this->form_validation->set_value('email', $this->email),			  
 			),
+			"address" => array(
+				'type' => 'text',
+				'label' => "Alamat",
+				'value' => $this->form_validation->set_value('address', $this->address),			  
+			  ),
 			"phone" => array(
 			  'type' => 'number',
 			  'label' => "Nomor Telepon",

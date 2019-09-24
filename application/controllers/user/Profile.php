@@ -34,19 +34,7 @@ class Profile extends User_Controller {
 		$this->data["sub_header"] = 'Klik Tombol Action Untuk Aksi Lebih Lanjut';
 		$this->render( "user/profile/content" );
 	}
-	// public function upload_photo()
-	// {
-	// 	if ( ! $this->ion_auth->upload_photo( 'user_image' ) )
-	// 	{
-	// 			$this->session->set_flashdata('alert', $this->alert->set_alert( Alert::DANGER,  $this->ion_auth->errors() ) );
-	// 			redirect(site_url('user/profile'));
-	// 	}
-	// 	else
-	// 	{
-	// 			$this->session->set_flashdata('alert', $this->alert->set_alert( Alert::SUCCESS, $this->ion_auth->messages() ) );
-	// 			redirect(site_url('user/profile'));
-	// 	}
-	// }
+
 	public function upload_photo()
 	{
 		if ( ! $this->ion_auth->upload_photo( ( "image" ) ) )
@@ -65,6 +53,7 @@ class Profile extends User_Controller {
 		$user_id = $this->ion_auth->get_user_id();
 
 		$this->data[ "page_title" ] = "Edit Profile";
+		// $this->form_validation->set_rules( "email", "email" , 'trim|required|valid_email|is_unique[users.email]' );
 		$this->form_validation->set_rules('first_name',  $this->lang->line('create_user_validation_fname_label'), 'trim|required');
 		$this->form_validation->set_rules('last_name', $this->lang->line('create_user_validation_lname_label') , 'trim|required');
 		$this->form_validation->set_rules('phone', $this->lang->line('create_user_validation_phone_label'), 'trim|required');
@@ -83,6 +72,7 @@ class Profile extends User_Controller {
 				'last_name' => $this->input->post('last_name'),
 				'phone' => $this->input->post('phone'),
 				'email' => $this->input->post('email'),
+				'address' => $this->input->post('address'),
 			);
 			if ( $this->input->post('password') )
 			{

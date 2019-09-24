@@ -523,7 +523,7 @@ class Ion_auth
 				$this->set_message('upload_successful');
 				if( $user->image != "default.jpg" )
 					$this->remove_photo( $user->image );
-					
+
 				$this->session->set_userdata(array( 'user_image'=> base_url('uploads/users_photo/').$data['image'] ) ) ;
 				return TRUE;
 			}
@@ -593,18 +593,18 @@ class Ion_auth
 			array(
 				'field' => 'email',
 				 'label' => 'Email',
-				 'rules' =>  'trim|required|valid_email',
+				 'rules' =>  'trim|required|valid_email|is_unique[users.email]',
 			),
 			array(
 				'field' => 'phone',
 				 'label' =>('No Telepon'),
 				 'rules' =>  'trim|required',
 			),
-			array(
-				'field' => 'address',
-				 'label' => 'Alamat',
-				 'rules' =>  'trim|required',
-			),
+			// array(
+			// 	'field' => 'address',
+			// 	 'label' => 'Alamat',
+			// 	 'rules' =>  'trim|required',
+			// ),
 			array(
 				'field' => 'password',
 				 'label' => "Kata Sandi",

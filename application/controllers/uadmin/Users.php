@@ -129,6 +129,7 @@ class Users extends Uadmin_Controller
         if ( $this->form_validation->run() === TRUE )
         {
 			$user_id = $this->input->post('id');
+			$group_id = $this->input->post('group_id');
       
             $data = array(
               'first_name' => $this->input->post('first_name'),
@@ -151,7 +152,7 @@ class Users extends Uadmin_Controller
 			{
               // redirect them back to the uadmin page if uadmin, or to the base url if non uadmin
               $this->session->set_flashdata('alert', $this->alert->set_alert( Alert::SUCCESS, $this->ion_auth->messages() ) );
-              redirect( site_url($this->current_page)  );
+              redirect( site_url($this->current_page.$this->ion_auth->group( $group_id )->row()->name)  );
             }
             else
             {

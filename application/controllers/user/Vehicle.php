@@ -1,20 +1,20 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-class Product extends User_Controller {
+class Vehicle extends User_Controller {
 	const IMAGE_TYPE = 4;
 	private $services = null;
     private $name = null;
     private $parent_page = 'user';
-	private $current_page = 'user/product/';
+	private $current_page = 'user/vehicle/';
 	private $store;
 	
 	public function __construct(){
 		parent::__construct();
-		$this->load->library('services/Product_services');
-		$this->services = new Product_services;
+		$this->load->library('services/Vehicle_services');
+		$this->services = new Vehicle_services;
 		$this->load->model(
 				array(
-				'product_model',
+				'vehicle_model',
 				'store_model',
 			)
 		);
@@ -26,15 +26,14 @@ class Product extends User_Controller {
 		{
 			redirect( site_url(  )."user/store"  );	
 		}
-
-		$this->data[ "menu_list_id" ] = "product_index";
+		$this->data[ "menu_list_id" ] = "vehicle_index";
 	}
 
 	public function upload_photo()
 	{
 		$name = $this->input->post( 'name' );
-		$product_id = $this->input->post( 'product_id' );
-		$product = $this->product_model->product( $product_id )->row();
+		$vehicle_id = $this->input->post( 'vehicle_id' );
+		$vehicle = $this->vehicle_model->vehicle( $vehicle_id )->row();
 		// upload photo		
 		$this->load->library('upload'); // Load librari upload
 		$config = $this->services->get_photo_upload_config( $name );
@@ -50,7 +49,7 @@ class Product extends User_Controller {
 				if( !@unlink( $config['upload_path'].$this->input->post( 'old_image' ) ) ){};
 
 			
-			$images = explode(";", $product->images );
+			$images = explode(";", $vehicle->images );
 			// unset( $images[ $this->input->post( 'image_index' ) ] );
 			
 			// $images []= $image;
@@ -61,19 +60,19 @@ class Product extends User_Controller {
 		{
 			// $data['image'] = "default.png";
 			$this->session->set_flashdata('alert', $this->alert->set_alert( Alert::DANGER, $this->upload->display_errors() ) );
-			redirect( site_url($this->current_page)."edit/".$product->id  );			
+			redirect( site_url($this->current_page)."edit/".$vehicle->id  );			
 		}
 
-		$data_param["id"] = $this->input->post( 'product_id' );
+		$data_param["id"] = $this->input->post( 'vehicle_id' );
 		// echo var_dump( $data ); return ;
-		if( $this->product_model->update( $data, $data_param ) )
+		if( $this->vehicle_model->update( $data, $data_param ) )
 		{
-			$this->session->set_flashdata('alert', $this->alert->set_alert( Alert::SUCCESS, $this->product_model->messages() ) );
+			$this->session->set_flashdata('alert', $this->alert->set_alert( Alert::SUCCESS, $this->vehicle_model->messages() ) );
 		}else{
-			$this->session->set_flashdata('alert', $this->alert->set_alert( Alert::DANGER, $this->product_model->errors() ) );
+			$this->session->set_flashdata('alert', $this->alert->set_alert( Alert::DANGER, $this->vehicle_model->errors() ) );
 		}
 		
-		redirect( site_url($this->current_page)."edit/".$product->id  );
+		redirect( site_url($this->current_page)."edit/".$vehicle->id  );
 	}
 
 	public function index()
@@ -82,7 +81,7 @@ class Product extends User_Controller {
 		// echo $page; return;
         //pagination parameter
         $pagination['base_url'] = base_url( $this->current_page ) .'/index';
-        $pagination['total_records'] = $this->product_model->record_count() ;
+        $pagination['total_records'] = $this->vehicle_model->record_count() ;
         $pagination['limit_per_page'] = 10;
         $pagination['start_record'] = $page*$pagination['limit_per_page'];
         $pagination['uri_segment'] = 4;
@@ -90,20 +89,19 @@ class Product extends User_Controller {
 		if ($pagination['total_records'] > 0 ) $this->data['pagination_links'] = $this->setPagination($pagination);
 		#################################################################3
 		$table = $this->services->get_table_config( $this->current_page );
-		$table[ "rows" ] = $this->product_model->product_by_store_id( $this->store->id , $pagination['start_record'], $pagination['limit_per_page'] )->result();
+		$table[ "rows" ] = $this->vehicle_model->vehicle_by_store_id( $this->store->id , $pagination['start_record'], $pagination['limit_per_page'] )->result();
 		$table[ "image_url" ] = $this->services->get_photo_upload_config( "" )["image_path"];
 
 		$table = $this->load->view('templates/tables/plain_table_image_col', $table, true);
 		$this->data[ "contents" ] = $table;
 		$add_menu = array(
-			"name" => "Tambah Produk",
+			"name" => "Tambah Transportasi",
 			"modal_id" => "add_gallery_",
 			"button_color" => "primary",
 			"url" => site_url( $this->current_page."add/"),
 			"form_data" => $this->services->get_form_data()["form_data"] ,
 			'data' => NULL
 		);
-
 		$add_menu= $this->load->view('templates/actions/modal_form_multipart', $add_menu, true ); 
 
 		$this->data[ "header_button" ] = $add_menu;
@@ -113,8 +111,8 @@ class Product extends User_Controller {
 		$this->data["key"] = $this->input->get('key', FALSE);
 		$this->data["alert"] = (isset($alert)) ? $alert : NULL ;
 		$this->data["current_page"] = $this->current_page;
-		$this->data["block_header"] = "Produk Saya";
-		$this->data["header"] = "Produk Saya";
+		$this->data["block_header"] = "Transportasi Saya";
+		$this->data["header"] = "Transportasi Saya";
 		$this->data["sub_header"] = 'Klik Tombol Action Untuk Aksi Lebih Lanjut';
 		$this->render( "templates/contents/plain_content" );
 	}
@@ -130,7 +128,8 @@ class Product extends User_Controller {
 			$data['category_id'] 	= $this->input->post( 'category_id' );
 			$data['name'] 			= $this->input->post( 'name' );
 			$data['description'] 	= $this->input->post( 'description' );
-			$data['price'] 			= $this->input->post( 'price' );
+			$data['capacity'] 		= $this->input->post( 'capacity' );
+			$data['police_number'] 	= $this->input->post( 'police_number' );
 			$data['unit'] 			= $this->input->post( 'unit' );
 			$data['timestamp'] 		= time();
 			$data['store_id'] 		= $this->store->id;
@@ -148,7 +147,7 @@ class Product extends User_Controller {
 
 				$file_data = $this->upload->get_multi_upload_data();
 				if( !empty( $this->upload->display_errors() ) ){
-					$this->product_model->set_error( $this->upload->display_errors() );
+					$this->vehicle_model->set_error( $this->upload->display_errors() );
 				}
 				foreach( $file_data as $i => $val )
 				{
@@ -165,22 +164,22 @@ class Product extends User_Controller {
 			}
 
 			// echo var_dump( $data );return;
-			if( $this->product_model->create( $data ) ){
-				$this->session->set_flashdata('alert', $this->alert->set_alert( Alert::SUCCESS, $this->product_model->messages() ) );
+			if( $this->vehicle_model->create( $data ) ){
+				$this->session->set_flashdata('alert', $this->alert->set_alert( Alert::SUCCESS, $this->vehicle_model->messages() ) );
 			}else{
-				$this->session->set_flashdata('alert', $this->alert->set_alert( Alert::DANGER, $this->product_model->errors() ) );
+				$this->session->set_flashdata('alert', $this->alert->set_alert( Alert::DANGER, $this->vehicle_model->errors() ) );
 			}
 		}
         else
         {
-          $this->data['message'] = (validation_errors() ? validation_errors() : ($this->m_account->errors() ? $this->product_model->errors() : $this->session->flashdata('message')));
-          if(  validation_errors() || $this->product_model->errors() ) $this->session->set_flashdata('alert', $this->alert->set_alert( Alert::DANGER, $this->data['message'] ) );
+          $this->data['message'] = (validation_errors() ? validation_errors() : ($this->m_account->errors() ? $this->vehicle_model->errors() : $this->session->flashdata('message')));
+          if(  validation_errors() || $this->vehicle_model->errors() ) $this->session->set_flashdata('alert', $this->alert->set_alert( Alert::DANGER, $this->data['message'] ) );
 		}
 		
 		redirect( site_url($this->current_page)  );
 	}
 
-	public function edit( $product_id )
+	public function edit( $vehicle_id )
 	{
 		$this->form_validation->set_rules( $this->services->validation_config(  ) );
 		if ( $this->form_validation->run() === TRUE )
@@ -193,22 +192,22 @@ class Product extends User_Controller {
 
 			$data_param["id"] = $this->input->post( 'id' );
 			// echo var_dump( $data ); return ;
-			if( $this->product_model->update( $data, $data_param ) )
+			if( $this->vehicle_model->update( $data, $data_param ) )
 			{
-				$this->session->set_flashdata('alert', $this->alert->set_alert( Alert::SUCCESS, $this->product_model->messages() ) );
+				$this->session->set_flashdata('alert', $this->alert->set_alert( Alert::SUCCESS, $this->vehicle_model->messages() ) );
 			}else{
-				$this->session->set_flashdata('alert', $this->alert->set_alert( Alert::DANGER, $this->product_model->errors() ) );
+				$this->session->set_flashdata('alert', $this->alert->set_alert( Alert::DANGER, $this->vehicle_model->errors() ) );
 			}
 			
 			redirect( site_url($this->current_page)  );
 		}
 		else
 		{
-			$this->data['message'] = (validation_errors() ? validation_errors() : ($this->product_model->errors() ? $this->product_model->errors() : $this->session->flashdata('message')));
-            if(  !empty( validation_errors() ) || $this->product_model->errors() ) $this->session->set_flashdata('alert', $this->alert->set_alert( Alert::DANGER, $this->data['message'] ) );
+			$this->data['message'] = (validation_errors() ? validation_errors() : ($this->vehicle_model->errors() ? $this->vehicle_model->errors() : $this->session->flashdata('message')));
+            if(  !empty( validation_errors() ) || $this->vehicle_model->errors() ) $this->session->set_flashdata('alert', $this->alert->set_alert( Alert::DANGER, $this->data['message'] ) );
 
-			$product = $this->product_model->product( $product_id )->row();
-			$images = explode(";", $product->images );
+			$vehicle = $this->vehicle_model->vehicle( $vehicle_id )->row();
+			$images = explode(";", $vehicle->images );
 			$images_arr = array();
 			$image_url = $this->services->get_photo_upload_config( "" )["image_path"];
 			foreach( $images as $i => $image ):
@@ -226,13 +225,13 @@ class Product extends User_Controller {
 						),
 						"name" => array(
 							'type' => 'hidden',
-							'label' => "product_id",
-							'value' => $product->name,	
+							'label' => "vehicle_id",
+							'value' => $vehicle->name,	
 						),
-						"product_id" => array(
+						"vehicle_id" => array(
 							'type' => 'hidden',
-							'label' => "product_id",
-							'value' => $product->id,	
+							'label' => "vehicle_id",
+							'value' => $vehicle->id,	
 						),
 						"image_index" => array(
 							'type' => 'hidden',
@@ -255,7 +254,7 @@ class Product extends User_Controller {
 				);
 			endforeach;
 
-			$form_data = $this->services->get_form_data( $product_id );
+			$form_data = $this->services->get_form_data( $vehicle_id );
 			unset( $form_data["form_data"]["images[]"] );
 			
 			$form_data = $this->load->view('templates/form/plain_form', $form_data , TRUE ) ;
@@ -272,7 +271,7 @@ class Product extends User_Controller {
 			$this->data["block_header"] = "Edit Produk Saya ";
 			$this->data["header"] = "Edit Produk Saya";
 			$this->data["sub_header"] = 'Klik Tombol Action Untuk Aksi Lebih Lanjut';
-            $this->render( "user/product/content_form" );            
+            $this->render( "user/vehicle/content_form" );            
 		}
 	}
 
@@ -282,19 +281,19 @@ class Product extends User_Controller {
 
 		$data_param['id'] 	= $this->input->post('id');
 
-		$product = $this->product_model->product( $data_param['id'] )->row();
-		if( $product == NULL ) redirect( site_url($this->current_page) );
+		$vehicle = $this->vehicle_model->vehicle( $data_param['id'] )->row();
+		if( $vehicle == NULL ) redirect( site_url($this->current_page) );
 		
-		if( $this->product_model->delete( $data_param ) ){
+		if( $this->vehicle_model->delete( $data_param ) ){
 			$image_url = $this->services->get_photo_upload_config( "" )["upload_path"];
-			$images = explode(";", $product->images );
+			$images = explode(";", $vehicle->images );
 			foreach( $images as $i => $image ):
 				echo $image_url.$image ." ";
 				if( !@unlink( $image_url.$image ) ){};
 			endforeach;
-		  	$this->session->set_flashdata('alert', $this->alert->set_alert( Alert::SUCCESS, $this->product_model->messages() ) );
+		  	$this->session->set_flashdata('alert', $this->alert->set_alert( Alert::SUCCESS, $this->vehicle_model->messages() ) );
 		}else{
-		  $this->session->set_flashdata('alert', $this->alert->set_alert( Alert::DANGER, $this->product_model->errors() ) );
+		  $this->session->set_flashdata('alert', $this->alert->set_alert( Alert::DANGER, $this->vehicle_model->errors() ) );
 		}
 		redirect( site_url($this->current_page)  );
 	}

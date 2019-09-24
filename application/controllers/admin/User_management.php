@@ -124,6 +124,7 @@ class User_management extends Admin_Controller
               'last_name' => $this->input->post('last_name'),
               'email' => $this->input->post('email'),
               'phone' => $this->input->post('phone'),
+              'address' => $this->input->post('address'),
               'group_id' => $this->input->post('group_id'),
             );
 			
