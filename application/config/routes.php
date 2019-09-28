@@ -59,3 +59,19 @@ $route['uadmin/users/add'] = 'uadmin/users/add';
 $route['uadmin/users/delete'] = 'uadmin/users/delete';
 
 $route['uadmin/users/(:any)'] = 'uadmin/users/index/$1';
+
+// category
+$route['api/user/(:num)'] = 'api/user/users/user_id/$1'; // Example 4
+// category
+$route['api/category/categories/(:num)'] = 'api/category/categories/id/$1'; // Example 4
+$route['api/category/categories/(:num)/start/(:any)/(:any)'] = 'api/category/categories/id/$1/start/$2/limit/$3'; // Example 4
+// categories_by_group
+$route['api/category/group_id/(:any)'] = 'api/category/categories_by_group/group_id/$1'; // Example 4
+// porduct
+$route['api/product/products/(:any)'] = 'api/product/products/category_id/$1'; // Example 4
+$route['api/product/user_products/(:any)'] = 'api/product/user_products/user_id/$1'; // Example 4
+$route['api/product/product/(:any)'] = 'api/product/product/product_id/$1'; // Example 4
+// porduct
+$route['api/store/stores/(:any)'] = 'api/store/stores/group_id/$1'; // Example 4
+$route['api/store/user_store/(:any)'] = 'api/store/user_store/user_id/$1'; // Example 4
+$route['api/store/store/(:any)'] = 'api/store/store/store_id/$1'; // Example 4

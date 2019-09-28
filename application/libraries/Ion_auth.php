@@ -361,8 +361,8 @@ class Ion_auth
 		$this->session->sess_destroy();
 
 		// Recreate the session
-		session_start();
-		$this->session->sess_regenerate(TRUE);
+		// session_start();
+		// $this->session->sess_regenerate(TRUE);
 
 		$this->set_message('logout_successful');
 		return TRUE;
@@ -590,11 +590,11 @@ class Ion_auth
 				 'label' => 'Nama Belakang',
 				 'rules' =>  'trim|required',
 			),
-			array(
-				'field' => 'email',
-				 'label' => 'Email',
-				 'rules' =>  'trim|required|valid_email|is_unique[users.email]',
-			),
+			// array(
+			// 	'field' => 'email',
+			// 	 'label' => 'Email',
+			// 	 'rules' =>  'trim|required|valid_email|is_unique[users.email]',
+			// ),
 			array(
 				'field' => 'phone',
 				 'label' =>('No Telepon'),

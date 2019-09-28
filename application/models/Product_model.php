@@ -139,7 +139,7 @@ class Product_model extends MY_Model
    * @return static
    * @author madukubah
    */
-  public function products( $start = 0 , $limit = NULL )
+  public function products( $start = 0 , $limit = NULL, $category_id = NULL  )
   {
       if (isset( $limit ))
       {
@@ -152,7 +152,10 @@ class Product_model extends MY_Model
         'category.id = '.$this->table.'.category_id',
         "inner"
       );
-
+      if (isset( $category_id ))
+      {
+        $this->where($this->table.'.category_id', $category_id);        
+      }
       $this->offset( $start );
       $this->order_by( $this->table.'.id', 'asc');
       return $this->fetch_data();

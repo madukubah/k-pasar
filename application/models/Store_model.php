@@ -142,7 +142,7 @@ class Store_model extends MY_Model
    * @return static
    * @author madukubah
    */
-  public function stores( $start = 0 , $limit = NULL )
+  public function stores( $start = 0 , $limit = NULL, $group_id = NULL )
   {
       if (isset( $limit ))
       {
@@ -150,6 +150,27 @@ class Store_model extends MY_Model
       }
       $this->select( $this->table.'.*' );
       $this->select( "CONCAT( '".base_url("uploads/store/")."' , {$this->table}.image ) as images" );
+      $this->select( 'groups.description as groups_name' );
+
+      $this->join( 
+        'users' ,
+        'users.id = '.$this->table.'.user_id',
+        'inner'
+      );
+      $this->join( 
+        'users_groups' ,
+        'users_groups.user_id = users.id',
+        'inner'
+      );
+      $this->join( 
+        'groups' ,
+        'groups.id = users_groups.group_id',
+        'inner'
+      );
+      if (isset( $group_id ))
+      {
+          $this->where( 'groups.id', $group_id);        
+      }
       $this->offset( $start );
       $this->order_by( $this->table.'.id', 'asc');
       return $this->fetch_data();

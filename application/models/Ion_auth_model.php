@@ -1001,8 +1001,12 @@ class Ion_auth_model extends MY_Model
 	 * @return    bool
 	 * @author    Mathew
 	 */
-	public function login_api( $identity, $password, $remember=FALSE )
+	public function login_api( $identity, $password, $remember=FALSE,  $identity_mode = NULL )
 	{
+		if( $identity_mode != NULL )
+		{
+			$this->identity_column = $identity_mode;
+		}
 		$this->trigger_events('pre_login');
 
 		if (empty($identity) || empty($password))
@@ -1013,11 +1017,21 @@ class Ion_auth_model extends MY_Model
 
 		$this->trigger_events('extra_where');
 
-		$query = $this->db->select($this->identity_column . ', email, id, password, active, last_login, CONCAT( first_name, " ", last_name ) as full_name , image, address')
-						  ->where($this->identity_column, $identity)
-						  ->limit(1)
-						  ->order_by('id', 'desc')
-						  ->get($this->tables['users']);
+		$query = $this->db->select( "users.".$this->identity_column . ', users.email, users.id, users.password, users.active, users.last_login, CONCAT( users.first_name, " ", users.last_name ) as user_fullname, CONCAT( "'.base_url('uploads/users_photo/').'", users.image ) as image, groups.id as groups_id, groups.description  as group_name')
+							->join(
+								"users_groups",
+								"users_groups.user_id = users.id",
+								"inner"
+							)
+							->join(
+								"groups",
+								"groups.id = users_groups.group_id",
+								"inner"
+							)
+							->where($this->identity_column, $identity)
+							->limit(1)
+							->order_by('id', 'desc')
+							->get($this->tables['users']);
 
 		if ($this->is_max_login_attempts_exceeded($identity))
 		{
@@ -1935,7 +1949,6 @@ class Ion_auth_model extends MY_Model
 		$user = $this->user($id)->row();
 
 		$this->db->trans_begin();
-
 		if (array_key_exists($this->identity_column, $data) && $this->identity_check( $data[$this->identity_column]) && $user->{$this->identity_column} !== $data[$this->identity_column])
 		{
 			$this->db->trans_rollback();
@@ -1957,7 +1970,7 @@ class Ion_auth_model extends MY_Model
 			$this->remove_from_group( FALSE , $id);
 			$this->add_to_group( $group_id , $id);
 		}
-
+		
 		// Filter the data passed
 		$data = $this->_filter_data($this->tables['users'], $data);
 
@@ -1984,7 +1997,7 @@ class Ion_auth_model extends MY_Model
 				}
 			}
 		}
-
+		
 		$this->trigger_events('extra_where');
 		$this->db->update($this->tables['users'], $data, ['id' => $user->id]);
 
@@ -1996,13 +2009,101 @@ class Ion_auth_model extends MY_Model
 			$this->set_error('update_unsuccessful');
 			return FALSE;
 		}
-
+		
 		$this->db->trans_commit();
-		$user = $this->user( )->row();
+		$user = $this->user(  )->row();
 		if( !$this->ion_auth->is_admin() )
 		{
 			$this->set_session($user);
 		}
+		$this->trigger_events(['post_update_user', 'post_update_user_successful']);
+		$this->set_message('update_successful');
+		return TRUE;
+	}
+
+	/**
+	 * update
+	 *
+	 * @param int|string $id
+	 * @param array      $data
+	 *
+	 * @return bool
+	 * @author Phil Sturgeon
+	 */
+	public function update_api($id, array $data, $identity_mode = NULL )
+	{
+		if( $identity_mode != NULL )
+		{
+			$this->identity_column = $identity_mode;
+		}
+		$this->trigger_events('pre_update_user');
+
+		$user = $this->user($id)->row();
+
+		$this->db->trans_begin();
+		if (array_key_exists($this->identity_column, $data) && $this->identity_check( $data[$this->identity_column]) && $user->{$this->identity_column} !== $data[$this->identity_column])
+		{
+			$this->db->trans_rollback();
+			$this->set_error('account_creation_duplicate_identity');
+
+			$this->trigger_events(['post_update_user', 'post_update_user_unsuccessful']);
+			$this->set_error('update_unsuccessful');
+
+			return FALSE;
+		}
+		else if( array_key_exists($this->identity_column, $data) )
+		{
+			$data["username"] = $data[$this->identity_column];
+		}
+
+		if( array_key_exists( "group_id" , $data) )
+		{
+			$group_id = $data[ "group_id" ];
+			$this->remove_from_group( FALSE , $id);
+			$this->add_to_group( $group_id , $id);
+		}
+		
+		// Filter the data passed
+		$data = $this->_filter_data($this->tables['users'], $data);
+
+		if (array_key_exists($this->identity_column, $data) || array_key_exists('password', $data) || array_key_exists('email', $data))
+		{
+			if (array_key_exists('password', $data))
+			{
+				if( ! empty($data['password']))
+				{
+					$data['password'] = $this->hash_password($data['password'], $user->{$this->identity_column});
+					if ($data['password'] === FALSE)
+					{
+						$this->db->trans_rollback();
+						$this->trigger_events(['post_update_user', 'post_update_user_unsuccessful']);
+						$this->set_error('update_unsuccessful');
+
+						return FALSE;
+					}
+				}
+				else
+				{
+					// unset password so it doesn't effect database entry if no password passed
+					unset($data['password']);
+				}
+			}
+		}
+		
+		$this->trigger_events('extra_where');
+		$this->db->update($this->tables['users'], $data, ['id' => $user->id]);
+
+		if ($this->db->trans_status() === FALSE)
+		{
+			$this->db->trans_rollback();
+
+			$this->trigger_events(['post_update_user', 'post_update_user_unsuccessful']);
+			$this->set_error('update_unsuccessful');
+			return FALSE;
+		}
+		
+		$this->db->trans_commit();
+		
 		$this->trigger_events(['post_update_user', 'post_update_user_successful']);
 		$this->set_message('update_successful');
 		return TRUE;

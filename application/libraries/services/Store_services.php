@@ -94,19 +94,19 @@ class Store_services
         ),
         array(
           'field' => 'start_date',
-          'label' => 'link',
+          'label' => 'start_date',
           'rules' =>  'trim|required',
         ),
         array(
           'field' => 'description',
-          'label' => 'icon',
+          'label' => 'description',
           'rules' =>  'trim|required',
 		),
-		array(
-			'field' => 'user_id',
-			'label' => 'User',
-			'rules' =>  'trim|required|is_unique[users.id]',
-		  ),
+		// array(
+		// 	'field' => 'user_id',
+		// 	'label' => 'User',
+		// 	'rules' =>  'trim|required|is_unique[store.user_id]',
+		// ),
     );
     
     return $config;

@@ -11,6 +11,7 @@ class Profile extends User_Controller {
 		parent::__construct();
 		$this->load->helper(array('url', 'language'));
 		$this->lang->load('auth');
+		$this->config->load('ion_auth', TRUE);
 
 		$this->load->library('services/User_services');
 		$this->services = new User_services;
