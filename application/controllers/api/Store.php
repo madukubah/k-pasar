@@ -69,7 +69,7 @@ class Store extends REST_Controller {
         }
         return $store->id;
     }
-
+   
     protected function store_check_by_user_id( $user_id )
     {
         $store = $this->store_model->store_by_user_id(  $user_id )->row();        
@@ -84,14 +84,21 @@ class Store extends REST_Controller {
         }
         return $store->id;
     }
+#################################################################################
 
     public function stores_get()
     {
         $group_id    = $this->get('group_id', 0);
         $group_id = ( $group_id != NULL ) ? $group_id : NULL ;
 
-        $products = $this->store_model->stores( 0, NULL, $group_id )->result();
-        $this->set_response( $products , REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+        $page    = $this->get('page', 0);
+        $page = ( $page != NULL ) ? $page : 0 ;
+
+        $limit_per_page = 10;
+        $start = $limit_per_page * $page;
+
+        $stores = $this->store_model->stores( $start , $limit_per_page, $group_id )->result();
+        $this->set_response( $stores , REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
     }
     public function user_store_get(  )
     {
@@ -312,6 +319,8 @@ class Store extends REST_Controller {
             $message = $this->upload->display_errors() ;
             $message = str_replace( '<b>', ' ', $message );
             $message = str_replace( '</b>', ' ', $message );
+            $message = str_replace( '<p>', ' ', $message );
+            $message = str_replace( '</p>', ' ', $message );
 
 			$result = array(
                 "message" => $message ,

@@ -1,7 +1,6 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 class Product extends User_Controller {
-	const IMAGE_TYPE = 4;
 	private $services = null;
     private $name = null;
     private $parent_page = 'user';
@@ -140,8 +139,6 @@ class Product extends User_Controller {
 			$config = $this->services->get_photo_upload_config( $data['name'] );
 
 			$this->upload->initialize( $config );
-			// echo var_dump( $_FILES['images'] ); return;
-			// if( $_FILES['image']['name'] != "" )
 			if( $this->upload->do_multi_upload( "images" ) )
 			{
 				$result = array();
@@ -165,7 +162,8 @@ class Product extends User_Controller {
 			}
 
 			// echo var_dump( $data );return;
-			if( $this->product_model->create( $data ) ){
+			if( $this->product_model->create( $data ) )
+			{
 				$this->session->set_flashdata('alert', $this->alert->set_alert( Alert::SUCCESS, $this->product_model->messages() ) );
 			}else{
 				$this->session->set_flashdata('alert', $this->alert->set_alert( Alert::DANGER, $this->product_model->errors() ) );
@@ -276,7 +274,8 @@ class Product extends User_Controller {
 		}
 	}
 
-	public function delete(  ) {
+	public function delete(  ) 
+	{
 
 		if( !($_POST) ) redirect( site_url($this->current_page) );
 

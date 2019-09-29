@@ -19,26 +19,26 @@ require APPPATH . 'libraries/Format.php';
  * @license         MIT
  * @link            https://github.com/chriskacerguis/codeigniter-restserver
  */
-class Product extends REST_Controller {
+class Vehicle extends REST_Controller {
     private $services = null;
     private $name = null;
     private $parent_page = 'user';
-	private $current_page = 'user/product/';
+	private $current_page = 'user/vehicle/';
 	private $store;
 	
 	public function __construct(){
         // Construct the parent class
         parent::__construct();
-        $this->load->library('services/Product_services');
-        $this->services = new Product_services;
+        $this->load->library('services/Vehicle_services');
+		$this->services = new Vehicle_services;
         
         $this->load->model( array( 
 			'category_model',
-			'product_model' ,
+			'vehicle_model' ,
 			'store_model' ,
         ));
-        $this->product_model->set_message_delimiters( '', '' );
-        $this->product_model->set_error_delimiters( '', '' );
+        $this->vehicle_model->set_message_delimiters( '', '' );
+        $this->vehicle_model->set_error_delimiters( '', '' );
     }
     protected function store_check( $store_id )
     {
@@ -54,10 +54,10 @@ class Product extends REST_Controller {
         }
         return $store->id;
     }
-    protected function product_check( $product_id )
+    protected function vehicle_check( $vehicle_id )
     {
-        $product = $this->product_model->product( $product_id )->row();
-        if ($product === NULL)
+        $vehicle = $this->vehicle_model->vehicle( $vehicle_id )->row();
+        if ($vehicle === NULL)
         {
             $result = array(
                 "message" =>  "Produk Tidak ada", 
@@ -66,10 +66,10 @@ class Product extends REST_Controller {
             $this->set_response( $result , REST_Controller::HTTP_NOT_FOUND); 
             return FALSE;
         }
-        return $product->id;
+        return $vehicle->id;
     }
 ##################################################################################
-    public function products_get()
+    public function vehicles_get()
     {
         $category_id    = $this->get('category_id', 0);
         $category_id = ( $category_id != NULL ) ? $category_id : NULL ;
@@ -77,13 +77,13 @@ class Product extends REST_Controller {
         $page    = $this->get('page', 0);
         $page = ( $page != NULL ) ? $page : 0 ;
 
-        $limit_per_page = 10;
+        $limit_per_page = 2;
         $start = $limit_per_page * $page;
 
-        $products = $this->product_model->products( $start , $limit_per_page, $category_id )->result();
-        $this->set_response( $products , REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+        $vehicles = $this->vehicle_model->vehicles( $start , $limit_per_page, $category_id )->result();
+        $this->set_response( $vehicles , REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
     }
-    public function user_products_get(  )
+    public function user_vehicles_get(  )
     {
         $user_id    = $this->get('user_id', 0);
         if ($user_id === NULL)
@@ -105,14 +105,14 @@ class Product extends REST_Controller {
             $this->set_response( $result , REST_Controller::HTTP_NOT_FOUND); 
             return;
         }
-        $products = $this->product_model->product_by_store_id( $store->id )->result();
-        $this->set_response( $products , REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+        $vehicles = $this->vehicle_model->vehicle_by_store_id( $store->id )->result();
+        $this->set_response( $vehicles , REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
     }
     
-    public function product_get(  )
+    public function vehicle_get(  )
     {
-        $product_id    = $this->get('product_id', 0);
-        if ($product_id === NULL)
+        $vehicle_id    = $this->get('vehicle_id', 0);
+        if ($vehicle_id === NULL)
         {
             $result = array(
                 "message" =>  "url tidak valid", 
@@ -122,17 +122,17 @@ class Product extends REST_Controller {
             return;
         }
 
-        $product = $this->product_model->product( $product_id )->row();
-        if ($product === NULL)
+        $vehicle = $this->vehicle_model->vehicle( $vehicle_id )->row();
+        if ($vehicle === NULL)
         {
             $this->set_response( array() , REST_Controller::HTTP_OK); 
             return;
         }
-        $data["hit"] = $product->hit +=1;
+        $data["hit"] = $vehicle->hit +=1;
 
-        $data_param["id"] = $product->id;
-        $this->product_model->update( $data, $data_param );
-        $this->set_response( $product , REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+        $data_param["id"] = $vehicle->id;
+        $this->vehicle_model->update( $data, $data_param );
+        $this->set_response( $vehicle , REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
     }
 ###########################################################################
     public function create_post(  )
@@ -146,7 +146,8 @@ class Product extends REST_Controller {
             $data['category_id'] 	= $this->input->post( 'category_id' );
 			$data['name'] 			= $this->input->post( 'name' );
 			$data['description'] 	= $this->input->post( 'description' );
-			$data['price'] 			= $this->input->post( 'price' );
+			$data['capacity'] 		= $this->input->post( 'capacity' );
+			$data['police_number'] 	= $this->input->post( 'police_number' );
 			$data['unit'] 			= $this->input->post( 'unit' );
 			$data['timestamp'] 		= time();
 			$data['store_id'] 		= $store_id;
@@ -171,16 +172,16 @@ class Product extends REST_Controller {
             }
             
             // echo var_dump( $data ); return ;
-			if( $this->product_model->create( $data ) )            
+			if( $this->vehicle_model->create( $data ) )            
             {
                 $result = array(
-                    "message" => $this->product_model->messages(),
+                    "message" => $this->vehicle_model->messages(),
                     "status" => 1,
                 );
                 $this->set_response( $result , REST_Controller::HTTP_OK); // CREATED (201) being the HTTP response code
             }else{
                 $result = array(
-                    "message" => $this->product_model->errors(),
+                    "message" => $this->vehicle_model->errors(),
                     "status" => 0,
                 );
                 $this->set_response( $result , REST_Controller::HTTP_OK); // CREATED (201) being the HTTP response code
@@ -190,7 +191,7 @@ class Product extends REST_Controller {
         else
         {
             $this->form_validation->set_error_delimiters('', ''); 
-            $message = (validation_errors() ? validation_errors() : ($this->product_model->errors() ? $this->product_model->errors() : $this->session->flashdata('message')));
+            $message = (validation_errors() ? validation_errors() : ($this->vehicle_model->errors() ? $this->vehicle_model->errors() : $this->session->flashdata('message')));
             $message = str_replace( '<b>', ' ', $message );
             $message = str_replace( '</b>', ' ', $message );
 
@@ -205,8 +206,8 @@ class Product extends REST_Controller {
 
     public function edit_post(  )
     {
-        $product_id    = $this->input->post( 'product_id' );
-        if ($product_id === NULL)
+        $vehicle_id    = $this->input->post( 'vehicle_id' );
+        if ($vehicle_id === NULL)
         {
             $result = array(
                 "message" =>  "url tidak valid", 
@@ -215,7 +216,7 @@ class Product extends REST_Controller {
             $this->set_response( $result , REST_Controller::HTTP_NOT_FOUND); 
             return;
         }
-        if( ( $product_id = $this->product_check( $product_id ) )  == FALSE ) return;
+        if( ( $vehicle_id = $this->vehicle_check( $vehicle_id ) )  == FALSE ) return;
 
         $this->form_validation->set_rules( $this->services->validation_config(  ) );
         if ( $this->form_validation->run() === TRUE )
@@ -223,21 +224,22 @@ class Product extends REST_Controller {
             $data['category_id'] 	= $this->input->post( 'category_id' );
 			$data['name'] 			= $this->input->post( 'name' );
 			$data['description'] 	= $this->input->post( 'description' );
-			$data['price'] 			= $this->input->post( 'price' );
+			$data['capacity'] 		= $this->input->post( 'capacity' );
+			$data['police_number'] 	= $this->input->post( 'police_number' );
 			$data['unit'] 			= $this->input->post( 'unit' );
             
-            $data_param["id"] = $product_id;
+            $data_param["id"] = $vehicle_id;
 
-			if( $this->product_model->update( $data, $data_param ) )     
+			if( $this->vehicle_model->update( $data, $data_param ) )     
             {
                 $result = array(
-                    "message" => $this->product_model->messages(),
+                    "message" => $this->vehicle_model->messages(),
                     "status" => 1,
                 );
                 $this->set_response( $result , REST_Controller::HTTP_OK); // CREATED (201) being the HTTP response code
             }else{
                 $result = array(
-                    "message" => $this->product_model->errors(),
+                    "message" => $this->vehicle_model->errors(),
                     "status" => 0,
                 );
                 $this->set_response( $result , REST_Controller::HTTP_OK); // CREATED (201) being the HTTP response code
@@ -247,7 +249,7 @@ class Product extends REST_Controller {
         else
         {
             $this->form_validation->set_error_delimiters('', ''); 
-            $message = (validation_errors() ? validation_errors() : ($this->product_model->errors() ? $this->product_model->errors() : $this->session->flashdata('message')));
+            $message = (validation_errors() ? validation_errors() : ($this->vehicle_model->errors() ? $this->vehicle_model->errors() : $this->session->flashdata('message')));
             $message = str_replace( '<b>', ' ', $message );
             $message = str_replace( '</b>', ' ', $message );
 
@@ -262,8 +264,8 @@ class Product extends REST_Controller {
 
     public function upload_photo_post()
 	{
-		$product_id    = $this->input->post( 'product_id' );
-        if ($product_id === NULL)
+		$vehicle_id    = $this->input->post( 'vehicle_id' );
+        if ($vehicle_id === NULL)
         {
             $result = array(
                 "message" =>  "url tidak valid", 
@@ -272,19 +274,19 @@ class Product extends REST_Controller {
             $this->set_response( $result , REST_Controller::HTTP_NOT_FOUND); 
             return;
         }
-        if( ( $product_id = $this->product_check( $product_id ) )  == FALSE ) return;
+        if( ( $vehicle_id = $this->vehicle_check( $vehicle_id ) )  == FALSE ) return;
 
-        $product = $this->product_model->product( $product_id )->row();
+        $vehicle = $this->vehicle_model->vehicle( $vehicle_id )->row();
 		// upload photo		
 		$this->load->library('upload'); // Load librari upload
-		$config = $this->services->get_photo_upload_config( $product->name );
+		$config = $this->services->get_photo_upload_config( $vehicle->name );
 
 		$this->upload->initialize( $config );
 		if( $this->upload->do_upload("image") )
 		{
 			$image		 	= $this->upload->data()["file_name"];
 			
-			$images = explode(";", $product->images );
+			$images = explode(";", $vehicle->images );
 			// unset( $images[ $this->input->post( 'image_index' ) ] );
             
             $old_image = $images[ $this->input->post( 'image_index' ) ];
@@ -301,8 +303,6 @@ class Product extends REST_Controller {
             $message = $this->upload->display_errors() ;
             $message = str_replace( '<b>', ' ', $message );
             $message = str_replace( '</b>', ' ', $message );
-            $message = str_replace( '<p>', ' ', $message );
-            $message = str_replace( '</p>', ' ', $message );
 
 			$result = array(
                 "message" => $message ,
@@ -311,18 +311,18 @@ class Product extends REST_Controller {
             $this->set_response( $result , REST_Controller::HTTP_OK); // CREATED (201) being the HTTP response code		
 		}
 
-		$data_param["id"] = $product_id;
+		$data_param["id"] = $vehicle_id;
 
-        if( $this->product_model->update( $data, $data_param ) )     
+        if( $this->vehicle_model->update( $data, $data_param ) )     
         {
             $result = array(
-                "message" => $this->product_model->messages(),
+                "message" => $this->vehicle_model->messages(),
                 "status" => 1,
             );
             $this->set_response( $result , REST_Controller::HTTP_OK); // CREATED (201) being the HTTP response code
         }else{
             $result = array(
-                "message" => $this->product_model->errors(),
+                "message" => $this->vehicle_model->errors(),
                 "status" => 0,
             );
             $this->set_response( $result , REST_Controller::HTTP_OK); // CREATED (201) being the HTTP response code
@@ -331,8 +331,8 @@ class Product extends REST_Controller {
     
     public function delete_post(  ) 
 	{
-        $product_id    = $this->input->post( 'product_id' );
-        if ($product_id === NULL)
+        $vehicle_id    = $this->input->post( 'vehicle_id' );
+        if ($vehicle_id === NULL)
         {
             $result = array(
                 "message" =>  "url tidak valid", 
@@ -341,27 +341,30 @@ class Product extends REST_Controller {
             $this->set_response( $result , REST_Controller::HTTP_NOT_FOUND); 
             return;
         }
-        if( ( $product_id = $this->product_check( $product_id ) )  == FALSE ) return;
+        if( ( $vehicle_id = $this->vehicle_check( $vehicle_id ) )  == FALSE ) return;
 
-		$data_param["id"] = $product_id;		
+		$data_param["id"] = $vehicle_id;		
 
-		$product = $this->product_model->product( $data_param['id'] )->row();
-		if( $product == NULL ) redirect( site_url($this->current_page) );
+		$vehicle = $this->vehicle_model->vehicle( $data_param['id'] )->row();
+		if( $vehicle == NULL ) redirect( site_url($this->current_page) );
 		
-		if( $this->product_model->delete( $data_param ) ){
+        if( $this->vehicle_model->delete( $data_param ) )
+        {
 			$image_url = $this->services->get_photo_upload_config( "" )["upload_path"];
-			$images = explode(";", $product->images );
+			$images = explode(";", $vehicle->images );
 			foreach( $images as $i => $image ):
 				if( !@unlink( $image_url.$image ) ){};
 			endforeach;
             $result = array(
-                "message" => $this->product_model->messages(),
+                "message" => $this->vehicle_model->messages(),
                 "status" => 1,
             );
             $this->set_response( $result , REST_Controller::HTTP_OK); // CREATED (201) being the HTTP response code
-		}else{
+        }
+        else
+        {
             $result = array(
-                "message" => $this->product_model->errors(),
+                "message" => $this->vehicle_model->errors(),
                 "status" => 0,
             );
             $this->set_response( $result , REST_Controller::HTTP_OK); // CREATED (201) being the HTTP response code

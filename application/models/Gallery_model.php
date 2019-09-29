@@ -111,7 +111,7 @@ class Gallery_model extends MY_Model
       $this->limit(1);
       $this->order_by($this->table.'.id', 'desc');
 
-      $this->galleries(  );
+      $this->galleries( 1 );
 
       return $this;
   }

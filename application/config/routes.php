@@ -69,9 +69,22 @@ $route['api/category/categories/(:num)/start/(:any)/(:any)'] = 'api/category/cat
 $route['api/category/group_id/(:any)'] = 'api/category/categories_by_group/group_id/$1'; // Example 4
 // porduct
 $route['api/product/products/(:any)'] = 'api/product/products/category_id/$1'; // Example 4
+$route['api/product/products/(:any)/(:any)'] = 'api/product/products/category_id/$1/page/$2'; // pagination
 $route['api/product/user_products/(:any)'] = 'api/product/user_products/user_id/$1'; // Example 4
 $route['api/product/product/(:any)'] = 'api/product/product/product_id/$1'; // Example 4
-// porduct
-$route['api/store/stores/(:any)'] = 'api/store/stores/group_id/$1'; // Example 4
-$route['api/store/user_store/(:any)'] = 'api/store/user_store/user_id/$1'; // Example 4
-$route['api/store/store/(:any)'] = 'api/store/store/store_id/$1'; // Example 4
+// store
+$route['api/store/stores/(:any)'] = 'api/store/stores/group_id/$1'; //semua store
+$route['api/store/stores/(:any)/(:any)'] = 'api/store/stores/group_id/$1/page/$2'; // pagination
+$route['api/store/user_store/(:any)'] = 'api/store/user_store/user_id/$1'; // user store
+$route['api/store/store/(:any)'] = 'api/store/store/store_id/$1'; // detail store
+
+// vehicle
+$route['api/vehicle/vehicles/(:any)'] = 'api/vehicle/vehicles/category_id/$1'; // Example 4
+$route['api/vehicle/vehicles/(:any)/(:any)'] = 'api/vehicle/vehicles/category_id/$1/page/$2'; // pagination
+$route['api/vehicle/user_vehicles/(:any)'] = 'api/vehicle/user_vehicles/user_id/$1'; // Example 4
+$route['api/vehicle/vehicle/(:any)'] = 'api/vehicle/vehicle/vehicle_id/$1'; // Example 4
+
+// gallery
+$route['api/gallery/user_galleries/(:any)'] = 'api/gallery/user_galleries/user_id/$1'; // Example 4
+$route['api/gallery/user_galleries/(:any)/(:any)'] = 'api/gallery/user_galleries/user_id/$1/page/$2'; // Example 4
+$route['api/gallery/gallery/(:any)'] = 'api/gallery/gallery/gallery_id/$1'; // Example 4

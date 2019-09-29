@@ -12,7 +12,20 @@ class Gallery_services
   {
     return get_instance()->$var;
   }
-  
+  public function get_photo_upload_config( $name = "_" )
+  {
+    $filename = "Gallery_".$name."_".time();
+    $upload_path = 'uploads/gallery/';
+
+    $config['upload_path'] = './'.$upload_path;
+    $config['image_path'] = base_url().$upload_path;
+    $config['allowed_types'] = "gif|jpg|png|jpeg";
+    $config['overwrite']="true";
+    $config['max_size']="2048";
+    $config['file_name'] = ''.$filename;
+
+    return $config;
+  }
   public function get_table_config( $_page, $start_number = 1 )
   {
       $table["header"] = array(
