@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 24, 2019 at 03:16 PM
+-- Generation Time: Sep 29, 2019 at 08:37 AM
 -- Server version: 10.1.34-MariaDB
 -- PHP Version: 5.6.37
 
@@ -100,8 +100,9 @@ CREATE TABLE `gallery` (
 
 INSERT INTO `gallery` (`id`, `type`, `name`, `description`, `file`) VALUES
 (1, 4, 'iklana', '-', 'Iklan_iklana_1569197550.JPG'),
-(11, 1, 'qwe', '-', 'Gallery_qwe_1569311057.JPG'),
-(12, 1, 'yuhu', '-', 'Gallery_yuhu_1569318097.JPG');
+(14, 1, 'name', 'description', 'Gallery_name_1569736542.jpeg'),
+(15, 1, 'name', 'description', 'Gallery_name_1569736596.jpeg'),
+(16, 1, 'name', 'description', 'Gallery_name_1569736598.jpeg');
 
 -- --------------------------------------------------------
 
@@ -124,7 +125,8 @@ INSERT INTO `groups` (`id`, `name`, `description`) VALUES
 (2, 'farmer', 'Petani'),
 (3, 'suplier', 'suplier'),
 (4, 'transporter', 'transporter'),
-(5, 'uadmin', 'uadmin');
+(5, 'uadmin', 'uadmin'),
+(6, 'member', 'Pengguna');
 
 -- --------------------------------------------------------
 
@@ -159,15 +161,6 @@ CREATE TABLE `login_attempts` (
   `login` varchar(100) NOT NULL,
   `time` int(11) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `login_attempts`
---
-
-INSERT INTO `login_attempts` (`id`, `ip_address`, `login`, `time`) VALUES
-(1, '::1', '081342989181', 1569289437),
-(3, '::1', '081342989181', 1569330539),
-(4, '::1', '081342989181', 1569330758);
 
 -- --------------------------------------------------------
 
@@ -218,7 +211,27 @@ INSERT INTO `menus` (`id`, `menu_id`, `name`, `link`, `list_id`, `icon`, `status
 (125, 4, 'Beranda', 'user/home', 'home_index', 'home', 1, 1, '-'),
 (126, 4, 'Usaha Saya', 'user/store', 'store_index', 'home', 1, 2, '-'),
 (127, 4, 'Transportasi Saya', 'user/vehicle', 'vehicle_index', 'home', 1, 3, '-'),
-(128, 4, 'Galeri', 'user/gallery', 'gallery_index', 'home', 1, 4, '-');
+(128, 4, 'Galeri', 'user/gallery', 'gallery_index', 'home', 1, 4, '-'),
+(129, 1, 'Mobile App', 'admin/mobile', 'mobile_index', 'home', 1, 5, '-');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `mobile`
+--
+
+CREATE TABLE `mobile` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `status` int(5) NOT NULL,
+  `message` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `mobile`
+--
+
+INSERT INTO `mobile` (`id`, `status`, `message`) VALUES
+(1, 2, 'alsdfjhasdf');
 
 -- --------------------------------------------------------
 
@@ -235,16 +248,17 @@ CREATE TABLE `product` (
   `category_id` int(10) UNSIGNED NOT NULL,
   `images` text NOT NULL,
   `unit` varchar(100) NOT NULL,
-  `timestamp` int(11) NOT NULL
+  `timestamp` int(11) NOT NULL,
+  `hit` int(5) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `product`
 --
 
-INSERT INTO `product` (`id`, `store_id`, `name`, `description`, `price`, `category_id`, `images`, `unit`, `timestamp`) VALUES
-(8, 5, 'sayur', 'sayur', 10000, 106, 'PRODUCT_qwe_1569302450.JPG;PRODUCT_qwe_1569302338.JPG;PRODUCT_qwe_1569302359.JPG', 'ikat', 0),
-(9, 6, 'traktor', 'traktor', 3000000, 111, 'PRODUCT_traktor_1569307442_0.jpg;PRODUCT_traktor_1569307442_1.JPG;PRODUCT_traktor_1569307442_2.JPG', 'unit', 0);
+INSERT INTO `product` (`id`, `store_id`, `name`, `description`, `price`, `category_id`, `images`, `unit`, `timestamp`, `hit`) VALUES
+(8, 5, 'sayur', 'sayur', 10000, 106, 'PRODUCT_qwe_1569302450.JPG;PRODUCT_qwe_1569302338.JPG;PRODUCT_qwe_1569302359.JPG', 'ikat', 0, 8),
+(9, 6, 'traktor', 'traktor', 3000000, 111, 'PRODUCT_traktor_1569307442_0.jpg;PRODUCT_traktor_1569307442_1.JPG;PRODUCT_traktor_1569307442_2.JPG', 'unit', 0, 0);
 
 -- --------------------------------------------------------
 
@@ -271,10 +285,11 @@ CREATE TABLE `store` (
 --
 
 INSERT INTO `store` (`id`, `user_id`, `name`, `description`, `address`, `timestamp`, `hit`, `latitude`, `longitude`, `image`, `start_date`) VALUES
-(5, 15, 'tani indah', 'teni jess', 'jln mutiara no 8', 1569240338, 0, '', '', 'STORE_tani_indah_1569240349.JPG', 1567548000),
+(5, 15, 'tani indah', 'teni jess', 'jln mutiara no 8', 1569240338, 1, '', '', 'STORE_tani_indah_1569240349.JPG', 1567548000),
 (6, 25, 'pembasmi greget', 'pembasmi greget', 'Jl. mutiara', 1569307252, 0, '', '', 'STORE_pembasmi_greget_1569307252.jpg', 1567461600),
 (7, 23, 'tani yuhu', 'asdf', 'jln mutiara', 1569310929, 0, '', '', 'STORE_tani_yuhu_1569310929.jpg', 1568239200),
-(8, 24, 'alan kurir', 'kurir cepat', 'alamat', 1569314134, 0, '', '', 'STORE_alan_kurir_1569314134.JPG', 1567634400);
+(8, 24, 'alan kurir', 'kurir cepat', 'alamat', 1569314134, 7, '', '', 'STORE_alan_kurir_1569314134.JPG', 1567634400),
+(11, 28, 'name', 'description', 'alamat', 1569661697, 0, '', '', 'STORE_name_1569664534.JPG', 1570572000);
 
 -- --------------------------------------------------------
 
@@ -293,8 +308,9 @@ CREATE TABLE `store_gallery` (
 --
 
 INSERT INTO `store_gallery` (`id`, `store_id`, `gallery_id`) VALUES
-(4, 6, 11),
-(5, 8, 12);
+(7, 8, 14),
+(8, 8, 15),
+(9, 8, 16);
 
 -- --------------------------------------------------------
 
@@ -330,14 +346,15 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `ip_address`, `username`, `password`, `email`, `activation_selector`, `activation_code`, `forgotten_password_selector`, `forgotten_password_code`, `forgotten_password_time`, `remember_selector`, `remember_code`, `created_on`, `last_login`, `active`, `first_name`, `last_name`, `phone`, `image`, `address`) VALUES
-(1, '127.0.0.1', 'admin@fixl.com', '$2y$12$8vyWKnAYbuWEDf2x2sVwDuV3Spm9wNulOJeVE2kUmdOpQ/9a1R/E2', 'admin@fixl.com', NULL, '', NULL, NULL, NULL, NULL, NULL, 1268889823, 1569313983, 1, 'Admin', 'istrator', '081342989185', 'USER_1_1568678001.jpeg', 'alamat'),
-(14, '::1', 'uadmin@gmail.com', '$2y$10$AdvTNWS7tmyY8a/1frHDzug4RtpDqHOlqn2l5hrWwbIyQcZ5Ksvtm', 'uadmin@gmail.com', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1569033287, 1569311537, 1, 'user', 'admin', '000', 'USER_14_1569237654.jpeg', 'alamat'),
-(15, '::1', '081342989111', '$2y$10$eDBfnio0vrTApEDpa2ExOe/HGazmyyYIWYCY57XeHjpOFR9CNLipW', 'allan@gmail.com', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1569108799, 1569318022, 1, 'alin', 'a', '081342989111', 'USER_15_1569233017.PNG', 'alamat'),
+(1, '127.0.0.1', 'admin@fixl.com', '$2y$12$8vyWKnAYbuWEDf2x2sVwDuV3Spm9wNulOJeVE2kUmdOpQ/9a1R/E2', 'admin@fixl.com', NULL, '', NULL, NULL, NULL, NULL, NULL, 1268889823, 1569737682, 1, 'Admin', 'istrator', '081342989185', 'USER_1_1568678001.jpeg', 'alamat'),
+(14, '::1', 'uadmin@gmail.com', '$2y$10$AdvTNWS7tmyY8a/1frHDzug4RtpDqHOlqn2l5hrWwbIyQcZ5Ksvtm', 'uadmin@gmail.com', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1569033287, 1569722426, 1, 'user', 'admin', '000', 'USER_14_1569237654.jpeg', 'alamat'),
+(15, '::1', '081342989111', '$2y$10$eDBfnio0vrTApEDpa2ExOe/HGazmyyYIWYCY57XeHjpOFR9CNLipW', 'allan@gmail.com', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1569108799, 1569659153, 1, 'alin', 'a', '081342989111', 'USER_15_1569233017.PNG', 'alamat'),
 (23, '::1', '123434654567', '$2y$10$RlYeDxRrHTmWfujeLh8c4.lt/horaJdOAX89oSDi4CtYVOSXuFXKC', 'qallan@gmail.com', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1569111752, 1569311097, 1, 'w', 'w', '123434654567', '', 'w'),
-(24, '::1', '3456656545', '$2y$10$7JOw4sHEzl72/B0LSm7Ua.TcE/cNdowpYw8Waqzzy2FovN7LnjczO', 'energinasantaramandiri@gmail.com', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1569112198, 1569318077, 1, 'e', 'e', '3456656545', 'USER_24_1569313962.jpg', 'e'),
+(24, '::1', '3456656545', '$2y$10$7JOw4sHEzl72/B0LSm7Ua.TcE/cNdowpYw8Waqzzy2FovN7LnjczO', 'energinasantaramandiri@gmail.com', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1569112198, 1569735437, 1, 'e', 'e', '3456656545', 'USER_24_1569313962.jpg', 'e'),
 (25, '::1', '123409871234', '$2y$10$iWIgl9DauGj8tYpSnGb2ceb5Snuy.maaQQxwQB9/juSlrwbIbADDm', 'yuhu@gmail.com', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1569307002, 1569318009, 1, 'yuhu', 'yuhu', '123409871234', 'USER_25_1569307206.jpeg', 'yuhu'),
 (26, '::1', '123443211234', '$2y$10$IUtortdeFyU4q7qY4S8qn.5tWAjfl7XByvSF4lT5lKIn5A7vnO2Im', 'qqqwe@gmail.com', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1569311573, 1569311605, 1, 'qwe', 'qwe', '123443211234', 'USER_26_1569311840.PNG', 'qqqwe@gmail.com'),
-(27, '::1', '123498763456', '$2y$10$zW4FM.zUn4dj5wcpMi9C9u2B9AyG00d6gybcDhryw7kXU0jNHyvCS', 'alan@gmail.com', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1569330150, 1569330207, 1, 'alan', 'alin', '123498763456', 'default.jpg', 'alamat');
+(27, '::1', '123498763456', '$2y$10$zW4FM.zUn4dj5wcpMi9C9u2B9AyG00d6gybcDhryw7kXU0jNHyvCS', 'alan@gmail.com', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1569330150, 1569330207, 1, 'alan', 'alin', '123498763456', 'default.jpg', 'alamat'),
+(28, '::1', '081342989114', '$2y$10$JP1y.I1ZxaWq1ZEUzInexOi1LR9vJ5rCvIf8MrgKsqEPUVfjcQdVC', 'yuhu123@gmail.com', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1569387054, 1569717373, 1, 'alan', 'madukubah', '081342989114', 'default.jpg', 'jln mutiara');
 
 -- --------------------------------------------------------
 
@@ -363,7 +380,8 @@ INSERT INTO `users_groups` (`id`, `user_id`, `group_id`) VALUES
 (37, 24, 4),
 (34, 25, 3),
 (35, 26, 3),
-(38, 27, 2);
+(38, 27, 2),
+(40, 28, 2);
 
 -- --------------------------------------------------------
 
@@ -381,15 +399,16 @@ CREATE TABLE `vehicle` (
   `unit` varchar(200) NOT NULL,
   `images` text NOT NULL,
   `police_number` varchar(20) NOT NULL,
-  `timestamp` int(11) NOT NULL
+  `timestamp` int(11) NOT NULL,
+  `hit` int(5) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `vehicle`
 --
 
-INSERT INTO `vehicle` (`id`, `category_id`, `store_id`, `name`, `description`, `capacity`, `unit`, `images`, `police_number`, `timestamp`) VALUES
-(2, 115, 8, 'nissan', 'mobil cepat', 123, 'ton', 'VEHICLE_nissan_1569317577.JPG;VEHICLE_nissan_1569317591.jpg;VEHICLE_qwe_1569317415_2.JPG', 'qw 12 qw', 1569317415);
+INSERT INTO `vehicle` (`id`, `category_id`, `store_id`, `name`, `description`, `capacity`, `unit`, `images`, `police_number`, `timestamp`, `hit`) VALUES
+(2, 115, 8, 'yuhuu', 'description', 123443, 'unit', 'VEHICLE_nissan_1569317577.JPG;VEHICLE_yuhuu_1569724190.jpeg;VEHICLE_yuhuu_1569724206.jpeg', '1234nb', 1569317415, 3);
 
 --
 -- Indexes for dumped tables
@@ -439,6 +458,12 @@ ALTER TABLE `login_attempts`
 -- Indexes for table `menus`
 --
 ALTER TABLE `menus`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `mobile`
+--
+ALTER TABLE `mobile`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -511,13 +536,13 @@ ALTER TABLE `category`
 -- AUTO_INCREMENT for table `gallery`
 --
 ALTER TABLE `gallery`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `groups`
 --
 ALTER TABLE `groups`
-  MODIFY `id` mediumint(8) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` mediumint(8) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `group_category`
@@ -529,49 +554,55 @@ ALTER TABLE `group_category`
 -- AUTO_INCREMENT for table `login_attempts`
 --
 ALTER TABLE `login_attempts`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `menus`
 --
 ALTER TABLE `menus`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=129;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=130;
+
+--
+-- AUTO_INCREMENT for table `mobile`
+--
+ALTER TABLE `mobile`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `product`
 --
 ALTER TABLE `product`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `store`
 --
 ALTER TABLE `store`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `store_gallery`
 --
 ALTER TABLE `store_gallery`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT for table `users_groups`
 --
 ALTER TABLE `users_groups`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 
 --
 -- AUTO_INCREMENT for table `vehicle`
 --
 ALTER TABLE `vehicle`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- Constraints for dumped tables
