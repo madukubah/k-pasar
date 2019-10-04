@@ -1500,6 +1500,7 @@ class Ion_auth_model extends MY_Model
 			    $this->tables['users'].'.*',
 			    $this->tables['users'].'.id as id',
 			    $this->tables['users'].'.id as user_id',
+			    $this->tables['users'].'.image as image_file',
 			    'CONCAT( users.first_name, " ", users.last_name ) as user_fullname',
 			    'CONCAT( "'.base_url('uploads/users_photo/').'", image ) as image',
 			    'groups.description  as group_name',
@@ -2123,7 +2124,7 @@ class Ion_auth_model extends MY_Model
 
 		$this->db->trans_begin();
 		$data_param['id'] = $id;
-		if( !$this->delete_foreign( $data_param  ) )
+		if( !$this->delete_foreign( $data_param, ["store_model"]  ) )
 		{
 			$this->set_error("gagal");//('product_delete_unsuccessful');
 			return FALSE;

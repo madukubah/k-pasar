@@ -522,7 +522,8 @@ class Ion_auth
 			{
 				$this->set_message('upload_successful');
 				if( $user->image != "default.jpg" )
-					$this->remove_photo( $user->image );
+					if( $this->remove_photo( $user->image_file ) ) {};
+
 
 				$this->session->set_userdata(array( 'user_image'=> base_url('uploads/users_photo/').$data['image'] ) ) ;
 				return TRUE;
@@ -621,13 +622,8 @@ class Ion_auth
 				 'rules' =>  'trim|required',
 			 ),
 		);
-		if( $this->router->fetch_method() == "edit" )
-		{
-			unset($config[7]);
-			
-		}
-		unset($config[6]);
-		unset($config[5]);
+		unset($config[4]);
+		unset($config[3]);
 		
 		return $config;
 	}

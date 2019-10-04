@@ -100,7 +100,7 @@ class Product extends REST_Controller {
         {
             $result = array(
                 "message" =>  "Belum Ada Store", 
-                "status" => 1,
+                "status" => 0,
             );
             $this->set_response( $result , REST_Controller::HTTP_NOT_FOUND); 
             return;

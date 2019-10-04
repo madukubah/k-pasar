@@ -71,7 +71,7 @@ class Store_model extends MY_Model
   {
     //foreign
     //delete_foreign( $data_param. $models[]  )
-    if( !$this->delete_foreign( $data_param ) )
+    if( !$this->delete_foreign( $data_param, ["store_gallery_model", "product_model", "vehicle_model"] ) )
     {
       $this->set_error("gagal");//('store_delete_unsuccessful');
       return FALSE;
