@@ -78,47 +78,6 @@ class User_services
 		);
     return $table;
   }
-  public function validation_config( ){
-    $config = array(
-        array(
-          'field' => 'name',
-          'label' => 'name',
-          'rules' =>  'trim|required',
-        ),
-        array(
-          'field' => 'link',
-          'label' => 'link',
-          'rules' =>  'trim|required',
-        ),
-        array(
-          'field' => 'icon',
-          'label' => 'icon',
-          'rules' =>  'trim|required',
-        ),
-        array(
-          'field' => 'position',
-          'label' => 'position',
-          'rules' =>  'trim|required',
-        ),
-        array(
-          'field' => 'status',
-          'label' => 'status',
-          'rules' =>  'trim|required',
-        ),
-        array(
-          'field' => 'description',
-          'label' => 'description',
-          'rules' =>  'trim|required',
-        ),
-        array(
-          'field' => 'menu_id',
-          'label' => 'menu_id',
-          'rules' =>  'trim|required',
-        ),
-    );
-    
-    return $config;
-  }
 
   /**
 	 * get_form_data
@@ -143,15 +102,6 @@ class User_services
 		}
 
 		$groups =$this->ion_auth_model->groups(  )->result();
-
-		$group_options ="";
-		foreach($groups as $n => $item)
-		{	
-			
-			$group_options .= form_radio("group_id", $item->id ,set_checkbox('group_id', $item->id), ' id="basic_checkbox_'.$n.'"');
-			$group_options .= '<label for="basic_checkbox_'.$n.'"> '. $item->name .'</label><br>';
-		}
-		$data['groups'] = $group_options;
 		$group_select = array();
 		foreach( $groups as $group )
 		{

@@ -28,7 +28,7 @@ class Group extends Admin_Controller {
 		//set pagination
 		if ($pagination['total_records'] > 0 ) $this->data['pagination_links'] = $this->setPagination($pagination);
 		#################################################################3
-		$table = $this->services->groups_table_config( $this->current_page );
+		$table = $this->services->get_table_config( $this->current_page );
 		$table[ "rows" ] = $this->group_model->groups( $pagination['start_record'], $pagination['limit_per_page'] )->result();
 		$table = $this->load->view('templates/tables/plain_table', $table, true);
 		$this->data[ "contents" ] = $table;

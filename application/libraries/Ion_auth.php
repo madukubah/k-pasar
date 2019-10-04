@@ -591,39 +591,17 @@ class Ion_auth
 				 'label' => 'Nama Belakang',
 				 'rules' =>  'trim|required',
 			),
-			// array(
-			// 	'field' => 'email',
-			// 	 'label' => 'Email',
-			// 	 'rules' =>  'trim|required|valid_email|is_unique[users.email]',
-			// ),
 			array(
 				'field' => 'phone',
 				 'label' =>('No Telepon'),
 				 'rules' =>  'trim|required',
 			),
-			// array(
-			// 	'field' => 'address',
-			// 	 'label' => 'Alamat',
-			// 	 'rules' =>  'trim|required',
-			// ),
-			array(
-				'field' => 'password',
-				 'label' => "Kata Sandi",
-				 'rules' =>  'required|min_length[' . $this->config->item('min_password_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_password_length', 'ion_auth') . ']|matches[password_confirm]',
-			 ),
-			 array(
-				'field' => 'password_confirm',
-				 'label' => "konfirmasi Kata Sandi",
-				 'rules' =>  'trim|required',
-			 ),
 			 array(
 				'field' => 'group_id',
 				 'label' => "User Group",
 				 'rules' =>  'trim|required',
 			 ),
 		);
-		unset($config[4]);
-		unset($config[3]);
 		
 		return $config;
 	}

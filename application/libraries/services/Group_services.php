@@ -13,7 +13,7 @@ class Group_services
     return get_instance()->$var;
   }
   
-  public function groups_table_config( $_page, $start_number = 1 )
+  public function get_table_config( $_page, $start_number = 1 )
   {
       $table["header"] = array(
         'name' => 'Nama Group',
