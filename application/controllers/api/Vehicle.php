@@ -192,8 +192,8 @@ class Vehicle extends REST_Controller {
         {
             $this->form_validation->set_error_delimiters('', ''); 
             $message = (validation_errors() ? validation_errors() : ($this->vehicle_model->errors() ? $this->vehicle_model->errors() : $this->session->flashdata('message')));
-            $message = str_replace( '<b>', ' ', $message );
-            $message = str_replace( '</b>', ' ', $message );
+            $message = str_replace( '<b>', '', $message );
+            $message = str_replace( '</b>', '', $message );
 
             $result = array(
                 "message" => $message ,
@@ -250,8 +250,8 @@ class Vehicle extends REST_Controller {
         {
             $this->form_validation->set_error_delimiters('', ''); 
             $message = (validation_errors() ? validation_errors() : ($this->vehicle_model->errors() ? $this->vehicle_model->errors() : $this->session->flashdata('message')));
-            $message = str_replace( '<b>', ' ', $message );
-            $message = str_replace( '</b>', ' ', $message );
+            $message = str_replace( '<b>', '', $message );
+            $message = str_replace( '</b>', '', $message );
 
             $result = array(
                 "message" => $message ,
@@ -301,8 +301,8 @@ class Vehicle extends REST_Controller {
 			// $data['image'] = "default.png";
 			$this->form_validation->set_error_delimiters('', ''); 
             $message = $this->upload->display_errors() ;
-            $message = str_replace( '<b>', ' ', $message );
-            $message = str_replace( '</b>', ' ', $message );
+            $message = str_replace( '<b>', '', $message );
+            $message = str_replace( '</b>', '', $message );
 
 			$result = array(
                 "message" => $message ,

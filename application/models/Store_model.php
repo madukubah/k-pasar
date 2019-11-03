@@ -151,6 +151,9 @@ class Store_model extends MY_Model
       $this->select( $this->table.'.*' );
       $this->select( "CONCAT( '".base_url("uploads/store/")."' , {$this->table}.image ) as images" );
       $this->select( 'groups.description as groups_name' );
+      $this->select( 'CONCAT( "'.base_url('uploads/users_photo/').'", users.image ) as user_image' );
+      $this->select( 'CONCAT( users.first_name, " ", users.last_name ) as user_fullname' );
+      $this->select( 'users.phone as users_phone' );
 
       $this->join( 
         'users' ,

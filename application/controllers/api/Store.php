@@ -82,7 +82,7 @@ class Store extends REST_Controller {
             $this->set_response( $result , REST_Controller::HTTP_NOT_FOUND); 
             return FALSE;
         }
-        return $store->id;
+        return TRUE;
     }
 #################################################################################
 
@@ -121,7 +121,7 @@ class Store extends REST_Controller {
                 "message" =>  "Belum Ada Store", 
                 "status" => 0,
             );
-            $this->set_response( $result , REST_Controller::HTTP_NOT_FOUND); 
+            $this->set_response( NULL , REST_Controller::HTTP_OK); 
             return;
         }
         $this->set_response( $store , REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
@@ -162,7 +162,7 @@ class Store extends REST_Controller {
         }
         if( ( $user_id = $this->user_check( $user_id ) )  == FALSE ) return;
 
-        if( ( $store_id = $this->store_check_by_user_id( $user_id ) )  == FALSE ) return;
+        if( ( $this->store_check_by_user_id( $user_id ) )  == FALSE ) return;
 
         $this->form_validation->set_rules( $this->services->validation_config(  ) );
 		if ( $this->form_validation->run() === TRUE )
@@ -178,7 +178,7 @@ class Store extends REST_Controller {
 			$data['timestamp'] = time();	
 			// upload photo		
 			$this->load->library('upload'); // Load librari upload
-			$config = $this->services->get_photo_upload_config( $data['name'] );
+			$config = $this->services->get_photo_upload_config(  );
 
 			$this->upload->initialize( $config );
 			if( $this->upload->do_upload("image") )
@@ -214,8 +214,8 @@ class Store extends REST_Controller {
 		{
             $this->form_validation->set_error_delimiters('', ''); 
             $message = (validation_errors() ? validation_errors() : ($this->store_model->errors() ? $this->store_model->errors() : $this->session->flashdata('message')));
-            $message = str_replace( '<b>', ' ', $message );
-            $message = str_replace( '</b>', ' ', $message );
+            $message = str_replace( '<b>', '', $message );
+            $message = str_replace( '</b>', '', $message );
 
 			$result = array(
                 "message" => $message ,
@@ -249,7 +249,22 @@ class Store extends REST_Controller {
 			$data['description'] = $this->input->post( 'description' );
 			$data['address'] = $this->input->post( 'address' );
 
-			$data_param["id"] = $store_id;
+            $data_param["id"] = $store_id;
+            
+            // upload photo		
+			$this->load->library('upload'); // Load librari upload
+			$config = $this->services->get_photo_upload_config( $store_id );
+            // if( $_FILES['image']['name'] != "" )
+			$this->upload->initialize( $config );
+
+            if( $this->upload->do_upload("image") )
+            {
+                $data['image'] = $this->upload->data()["file_name"];
+                
+                $store = $this->store_model->store( $store_id )->row();
+                if( $store->image != "default.png" )
+				    if( !@unlink( $config['upload_path']. $store->image ) );
+            }
 			
 			if( $this->store_model->update( $data, $data_param ) )			
 			{
@@ -271,8 +286,8 @@ class Store extends REST_Controller {
 		{
             $this->form_validation->set_error_delimiters('', ''); 
             $message = (validation_errors() ? validation_errors() : ($this->store_model->errors() ? $this->store_model->errors() : $this->session->flashdata('message')));
-            $message = str_replace( '<b>', ' ', $message );
-            $message = str_replace( '</b>', ' ', $message );
+            $message = str_replace( '<b>', '', $message );
+            $message = str_replace( '</b>', '', $message );
 
 			$result = array(
                 "message" => $message ,
@@ -317,10 +332,10 @@ class Store extends REST_Controller {
 			// $data['image'] = "default.png";
 			$this->form_validation->set_error_delimiters('', ''); 
             $message = $this->upload->display_errors() ;
-            $message = str_replace( '<b>', ' ', $message );
-            $message = str_replace( '</b>', ' ', $message );
-            $message = str_replace( '<p>', ' ', $message );
-            $message = str_replace( '</p>', ' ', $message );
+            $message = str_replace( '<b>', '', $message );
+            $message = str_replace( '</b>', '', $message );
+            $message = str_replace( '<p>', '', $message );
+            $message = str_replace( '</p>', '', $message );
 
 			$result = array(
                 "message" => $message ,

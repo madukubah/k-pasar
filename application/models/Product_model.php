@@ -147,6 +147,22 @@ class Product_model extends MY_Model
       }
       $this->select( $this->table.'.*' );
       $this->select( 'category.name as category_name' );
+      $this->select( 'store.name as store_name' );
+      $this->select( 'store.description as store_description' );
+      $this->select( 'CONCAT( users.first_name, " ", users.last_name ) as user_fullname' );
+      $this->select( 'CONCAT( "'.base_url('uploads/users_photo/').'", users.image ) as user_image' );
+      $this->select( 'users.phone as users_phone' );
+
+      $this->join( 
+        'store' ,
+        'store.id = '.$this->table.'.store_id',
+        "inner"
+      );
+      $this->join( 
+        'users' ,
+        'users.id = store.user_id',
+        "inner"
+      );
       $this->join( 
         'category' ,
         'category.id = '.$this->table.'.category_id',

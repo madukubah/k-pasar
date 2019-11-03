@@ -32,7 +32,7 @@ class Product extends REST_Controller {
         $this->load->library('services/Product_services');
         $this->services = new Product_services;
         
-        $this->load->model( array( 
+        $this->load->model( array(
 			'category_model',
 			'product_model' ,
 			'store_model' ,
@@ -191,8 +191,8 @@ class Product extends REST_Controller {
         {
             $this->form_validation->set_error_delimiters('', ''); 
             $message = (validation_errors() ? validation_errors() : ($this->product_model->errors() ? $this->product_model->errors() : $this->session->flashdata('message')));
-            $message = str_replace( '<b>', ' ', $message );
-            $message = str_replace( '</b>', ' ', $message );
+            $message = str_replace( '<b>', '', $message );
+            $message = str_replace( '</b>', '', $message );
 
             $result = array(
                 "message" => $message ,
@@ -248,8 +248,8 @@ class Product extends REST_Controller {
         {
             $this->form_validation->set_error_delimiters('', ''); 
             $message = (validation_errors() ? validation_errors() : ($this->product_model->errors() ? $this->product_model->errors() : $this->session->flashdata('message')));
-            $message = str_replace( '<b>', ' ', $message );
-            $message = str_replace( '</b>', ' ', $message );
+            $message = str_replace( '<b>', '', $message );
+            $message = str_replace( '</b>', '', $message );
 
             $result = array(
                 "message" => $message ,
@@ -299,10 +299,10 @@ class Product extends REST_Controller {
 			// $data['image'] = "default.png";
 			$this->form_validation->set_error_delimiters('', ''); 
             $message = $this->upload->display_errors() ;
-            $message = str_replace( '<b>', ' ', $message );
-            $message = str_replace( '</b>', ' ', $message );
-            $message = str_replace( '<p>', ' ', $message );
-            $message = str_replace( '</p>', ' ', $message );
+            $message = str_replace( '<b>', '', $message );
+            $message = str_replace( '</b>', '', $message );
+            $message = str_replace( '<p>', '', $message );
+            $message = str_replace( '</p>', '', $message );
 
 			$result = array(
                 "message" => $message ,

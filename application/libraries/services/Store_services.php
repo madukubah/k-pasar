@@ -23,7 +23,7 @@ class Store_services
   {
     return get_instance()->$var;
   }
-  public function get_photo_upload_config( $name )
+  public function get_photo_upload_config( $name = "_" )
   {
     $filename = "STORE_".$name."_".time();
     $upload_path = 'uploads/store/';

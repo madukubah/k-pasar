@@ -288,7 +288,7 @@ class Product extends User_Controller {
 			$image_url = $this->services->get_photo_upload_config( "" )["upload_path"];
 			$images = explode(";", $product->images );
 			foreach( $images as $i => $image ):
-				echo $image_url.$image ." ";
+				// echo $image_url.$image ." ";
 				if( !@unlink( $image_url.$image ) ){};
 			endforeach;
 		  	$this->session->set_flashdata('alert', $this->alert->set_alert( Alert::SUCCESS, $this->product_model->messages() ) );

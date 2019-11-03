@@ -2,8 +2,6 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 class Gallery_services
 {
-  
-
   function __construct(){
 
   }

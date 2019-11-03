@@ -1017,7 +1017,7 @@ class Ion_auth_model extends MY_Model
 
 		$this->trigger_events('extra_where');
 
-		$query = $this->db->select( "users.".$this->identity_column . ', users.email, users.id, users.password, users.active, users.last_login, CONCAT( users.first_name, " ", users.last_name ) as user_fullname, CONCAT( "'.base_url('uploads/users_photo/').'", users.image ) as image, groups.id as groups_id, groups.description  as group_name')
+		$query = $this->db->select( "users.".$this->identity_column . ', users.email, users.id, users.password, users.active, users.last_login, CONCAT( users.first_name, " ", users.last_name ) as user_fullname ,users.first_name , users.last_name , users.address, CONCAT( "'.base_url('uploads/users_photo/').'", users.image ) as image, groups.id as group_id, groups.description  as group_name')
 							->join(
 								"users_groups",
 								"users_groups.user_id = users.id",

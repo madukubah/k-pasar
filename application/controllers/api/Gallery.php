@@ -113,7 +113,7 @@ class Gallery extends REST_Controller {
         $page    = $this->get('page', 0);
         $page = ( $page != NULL ) ? $page : 0 ;
 
-        $limit_per_page = 10;
+        $limit_per_page = NULL;
         $start = $limit_per_page * $page;
 
         $galleries = $this->gallery_model->galleries_by_store_id( $store->id, Gallery::IMAGE_TYPE,  $start, $limit_per_page )->result();
